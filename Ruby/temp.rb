@@ -976,7 +976,7 @@ countdown(4) { |n| puts "Number is #{n}"}
 =end
 
 # Default parameter
-
+=begin
 def make_animal_sound1(sound = 'Cuack')
     puts sound
 end
@@ -1021,4 +1021,97 @@ end
 my_mix("usman") # usman true
 my_mix("usman", false) # usman true
 my_mix("usman", false, 2,4) # usman true [2,4]
+
+# using a function as a block
+x = [0, 1, 2]
+p x.map {|i| i + 1}
+
+def inc(num)
+    num + 1
+end
+p x.map &method(:inc)
+
+# Tuple argument
+
+def feed( amount, (animal, food) )
+    p "#{amount} #{animal}s chew some #{food}"
+end
+feed 3, [ 'rabbit', 'grass' ] # 3 rabbits chew some grass
+=end
+
+# ** opeartor
+=begin
+def options(required_key:, optional_key: nil, **other_options)
+    other_options
+end
+my_hash = { foo: 'Foo!', bar: 'Bar!' }
+p options(required_key: true, **my_hash) # { :foo => "Foo!", :bar => "Bar!" }
+=end
+# method definition are expression
+=begin
+class Class
+    def logged(name)
+        original_method = instance_method(name)
+        define_method(name) do |*args|
+            puts "Calling #{name} with #{args.inspect}."
+            original_method.bind(self).call(*args)
+            puts "Completed #{name}."
+        end
+    end
+end
+class Meal
+    def initialize
+        @food = []
+    end
+    logged def add(item)
+        @food << item
+    end
+end
+meal = Meal.new
+meal.add "Coffee"
+=end
+
+# Hashes -) A Hash is a dictionary-like collection of unique keys and their values
+# -)  A hash in Ruby is an object that implements a hash table, mapping keys to values
+my_hash = {} # an empty hash
+# while all syntax versions can be mixed, the following is discouraged because key would be of one type
+grades = { 'Mark' => 15, 'Jimmy' => 10, 'Jack' => 10 , [2,4] => 6, :name => 'usman'}
+p grades['Mark'] # 15
+# Also keys can be of any type, including complex ones
+p grades[[2,4]] # 6
+# Symbols are commonly used as hash keys
+p grades[:name]
+
+# Setting default values
+
+h = Hash.new(0)
+h[:hi] = 1
+puts h[:hi] #  1
+puts h[:bye] # 0 returns default value instead of nil
+
+# Use an empty array as the default value
+authors1 = Hash.new([])
+# Append a book title
+p authors1[:homer] << 'The Odyssey' #  ['The Odyssey']
+# All new keys map to a reference to the same array:
+p authors1[:plato] #  ['The Odyssey']
+
+# the Hash constructor accepts a block which is executed each time a new key is accessed
+authors2 = Hash.new { [] }
+# Note that we're using += instead of <<, see below
+p authors2[:homer] += ['The Odyssey'] #  ['The Odyssey']
+p authors2[:plato] #  []
+p authors2 #  {:homer=>["The Odyssey"]}
+
+
+
+
+
+
+
+
+
+
+
+
 
