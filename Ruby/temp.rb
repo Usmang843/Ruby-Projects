@@ -515,12 +515,510 @@ p a.inject(:+) # 6
 =end
 
 # filtered Arrays
+=begin
 a = [1,2,3,4,5,6,7,8]
 p a.select { |n| n >= 4 } # [4,5,6,7,8]
 p a.reject {|n| n >= 4} # [1,2,3]
 p a.select { |n| n>4 }.reject { |n| n < 6} # [6, 7, 8]
 
+=end
+
+# map  -) creates an array by invoking a block on each element and collecting the results
+=begin
+a = [1,2,3,4]
+p a.map { |n|  n * 4 } # [4,8,12,16]
+# original array is not modified; a new array is returned containing the transformed values in the same order as the source values
+# map! can be used if you want to modify the original array
+
+# call to_i method on all elements
+p %w(1 2 3 4 5 6 7 8 9 10).map(&:to_i) # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+# using proc (lambda) on all elements
+p %w(1 2 3 4 5 6 7 8 9 10).map(&->(i){ i.to_i * 2}) # [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+
+# (*) operator can be used to unpack variables and arrays so that they can be passed as individual arguments to a method.
+def wrap_in_array(value)
+    p [*value]
+end
+wrap_in_array(1) # [1]
+wrap_in_array([1, 2, 3]) # [1, 2, 3]
+wrap_in_array(nil) # []
+
+def list(*values)
+    values.each do |value|
+        # do something with value
+        puts value
+    end
+end
+
+list(100) # 100
+list ([100, 200, 300, 400])
+list (nil) # empty
+=end
+
+# two dimensional array
+=begin
+array = Array.new(5) {Array.new(5) {0}}
+p array
+x = 0
+array[0][0] = 2
+(0...5).each do |i|
+    (0...5).each do |j|
+        array[i][j] = (j % 4) + 1
+    end
+end
+p array
+
+# Turn multi-dimensional array into a onedimensional (flattened) array
+a = [1, 2, [[3, 4], [5]], 6]
+p a.flatten # [1,2,3,4,5,6]
+p a # [1, 2, [[3, 4], [5]], 6]
+# Get unique array elements
+a = [1, 1, 2, 3, 4, 4, 5]
+p a.uniq! # [1,2,3,4,5]
+p a
+=end
+
+# create array of numbers
+=begin
+number = Array(1...11) # [1,2,3,4,5,6,7,8,9,10]
+p number
+number2 = (1...11).to_a # [1,2,3,4,5,6,7,8,9,10]
+p number2
+
+odd_numbers = (1..10).step(2).to_a
+p odd_numbers # [1, 3, 5, 7, 9]
+even_numbers = 2.step(20, 2).to_a
+p even_numbers # [2, 4, 6, 8, 10]
+squared_numbers = (1..10).map { |n| n * n }
+p squared_numbers # [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+arr = (1..10).to_a
+p arr # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+arr = [*'A'...'E']
+p arr # ["A", "B", "C", "D"]
+
+=end
+
+# cast array from any object
+=begin
+p Array('something') #=> ["something"]
+p Array([2, 1, 5]) # [2, 1, 5]
+p Array(1) # [1]
+p Array(2..4) # [2, 3, 4]
+p Array([]) # []
+p Array(nil) # []
+
+def join_as_string(arg)
+    if arg.instance_of?(Array)
+        arg.join(',')
+    elsif arg.instance_of?(Range)
+        arg.to_a.join(',')
+    else
+        arg.to_s
+    end
+end
+p join_as_string('something') # "something"
+p join_as_string([2, 1, 5]) # "2,1,5"
+p join_as_string(1) # "1"
+p join_as_string(2..4) # "2,3,4"
+p join_as_string([]) # ""
+p join_as_string(nil)
+
+def join_as_Array (arg)
+    Array(arg)
+end
+p join_as_Array('something') # "something"
+p join_as_Array([2, 1, 5]) # [2,1,5]
+p join_as_Array(1) # [1]
+p join_as_Array(2..4) # [2,3,4]
+p join_as_Array([]) # []
+p join_as_Array(nil) # []
+
+=end
+
+# multidimensional array
+=begin
+my_array = [1, 1, 2, 3, 5, 8, 13]
+p my_array # [1, 1, 2, 3, 5, 8, 13]
+# two dimensional array
+my_array1 = [
+    [1, 1, 2, 3, 5, 8, 13],
+    [1, 4, 9, 16, 25, 36, 49, 64, 81],
+    [2, 3, 5, 7, 11, 13, 17]
+]
+p my_array1 # [ [1, 1, 2, 3, 5, 8, 13], [1, 4, 9, 16, 25, 36, 49, 64, 81], [2, 3, 5, 7, 11, 13, 17]]
+p my_array1[0][1] # 1
+# three dimensional array
+my_array2 = [
+    [
+        [1, 1, 2, 3, 5, 8, 13],
+        [1, 4, 9, 16, 25, 36, 49, 64, 81],
+        [2, 3, 5, 7, 11, 13, 17]
+    ],
+    [
+        ['a', 'b', 'c', 'd', 'e'],
+        ['z', 'y', 'x', 'w', 'v']
+    ],
+    [
+        []
+    ]
+]
+p my_array2[1][0][3] # "d"
+p my_array2.flatten.uniq # [1, 2, 3, 5, 8, 13, 4, 9, 16, 25, 36, 49, 64, 81, 7, 11, 17, "a", "b", "c", "d", "e", "z", "y", "x", "w", "v"]
+
+=end
+
+# String
+# Single-quoted strings don't support interpolation
+# Double-quoted strings also support the entire set of escape sequences including "\n", "\t"...
+# Double-quoted strings support interpolation
+=begin
+puts 'Now is #{Time.now}' # -) Now is #{Time.now}
+puts 'Now is #{Time.now}' # -) Now is 2016-07-21 12:43:04 +0200
+str = 'A String' # || %(A String) || %{A String} || %<A String> || %|A String| || %!A String!
+p str
+puts %q(Now is #{Time.now}) # -) # Now is #{Time.now}
+puts %Q(Now is #{Time.now}) # -) # Now is 2016-07-21 12:47:45 +0200
 
 
+# Case Manipulation -) do not modify the original receiver
+str2 = "stRing"
+p str2.upcase #  "STRING"
+p str2.downcase #  "string"
+p str2.swapcase #  "STrING"
+p str2.capitalize #  "String"
+p str2 # "stRing"
+p str2.upcase! # "STRING" -) modify original receiver
+p str2
 
+# string concatenation
+s1 = "Hello"
+s2 = " "
+s3 = "World"
+puts s1 + s2 + s3 # Hello World
+puts s1 << s2 << s3 # Hello World
+
+# Positioning String -) ljust # left-justify -) rjust # right-justify -) center # center
+str3 = "abcd"
+p str3.ljust(10) # "abcd      "
+p str3.rjust(10) # "      abcd"
+p str3.center(10) # "   abcd   "
+=end
+
+# Splititng a String
+=begin
+str = "usman, Ur, Rehman . Rasheed"
+p str.split(',') # ["usman ", " Ur", " Rehman . Rasheed"] -) string to array
+p str.split('.') # ["usman , Ur, Rehman"]
+p str.split() # ["usman","Ur,", "Rehman", ".", "Rasheed"] # delimiter is optional, by default a string is split on whitespace
+
+p str.start_with?("usman") # true
+p str.index("usman").zero? # true
+p str.end_with?("Rasheed") # true
+
+arr = [1,2,3,4]
+p arr.join(",") # "1,2,3,4" -) array to string
+
+# String Substitution %s
+p "This is %s" % "usman" # "This is usman"
+p "%s %s %s" % ["usman", "ur", "rehman"] # "usman ur rehman"
+p "%{name} == %{name}" % {:name => "usman" } # "name == usman"
+=end
+
+# Multiline String
+=begin
+address = "Four score and seven years ago our fathers brought forth on this
+continent, a new nation, conceived in Liberty, and dedicated to the
+proposition that all men are created equal."
+p address # oneline string
+
+# multiline string -) <<-name_of_string text in the string name_of_string
+
+puts <<-MultiString
+ Once upon a midnight dreary, while I pondered, weak and weary,
+ Over many a quaint and curious volume of forgotten lore—
+ While I nodded, nearly napping, suddenly there came a tapping,
+ As of some one gently rapping, rapping at my chamber door.
+ "'Tis some visitor," I muttered, "tapping at my chamber door—
+ Only this and nothing more."
+MultiString
+=end
+
+# String character replacement
+=begin
+a = "usman ur rehman"
+p a.tr('u', 'o') # return a copy of string with replacement
+p a.sub('u', 'o')  # osman ur rehman -) first occurrence of a pattern
+p a.gsub('u', 'o') # osman or rehman -) replace all occurrences of a pattern
+
+# understanding the data in the string
+p a.bytes # [117, 115, 109, 97, 110, 32, 117, 114, 32, 114, 101, 104, 109, 97, 110]
+p a.encoding.name
+
+# Date Time from string
+t = Time.now
+p t
+=end
+
+# Symbol can't be changeable  || string can be changeable
+# Converting a String to Symbol
+=begin
+s = "string"
+s = s.to_sym # :string -) converting string to symbol
+p s
+# Converting a Symbol to String
+s = s.to_s # "string" -) converting symbol to string
+p s
+=end
+
+# Comparable
+=begin
+class Rectangle
+    include Comparable
+    def initialize(a, b)
+        @a = a
+        @b = b
+    end
+    def area
+        @a * @b
+    end
+    def <=>(other)
+        area <=> other.area
+    end
+end
+r1 = Rectangle.new(2, 2)
+r2 = Rectangle.new(4, 4)
+r3 = Rectangle.new(3, 3)
+p r2 >= r1 # => true
+p r2.between? r1, r3 # => false  -) compares values
+p r3.between? r1, r2 # => true
+
+=end
+
+# control flow
+=begin
+result = ["heads", "tails"].sample # result = [:heads, :tails].sample
+if result == "heads"
+    puts 'The coin-toss came up "heads"'
+else
+    puts 'The coin-toss came up "tails"'
+end
+
+x = 6
+case x
+when 1,2,3,4 then puts "1, 2, 3 or 4"
+when 10 then puts "10"
+else puts "Some other number"
+end
+
+puts "x is less than 5" if x < 5
+puts "x is greater than 5" if x > 5
+
+str = "goole"
+case str
+when /oo/
+    puts "word contains oo"
+end
+
+num = 47
+case num
+when -> (n) { n.even? or n < 0 }
+    puts "even or less than zero"
+when -> (n) {n.odd? or n > 0}
+    puts "odd or greater than zero"
+end
+
+description = case 16
+when 13..19 then "teenager"
+              else ""
+              end
+p description
+
+def check_truthy(var_name, var)
+    is_truthy = var ? "truthy" : "falsy"
+    puts "#{var_name} is #{is_truthy}"
+end
+check_truthy("false", false)
+check_truthy("nil", nil)
+check_truthy("0", 0)
+check_truthy("empty string", "")
+check_truthy("\\n", "\n")
+check_truthy("empty array", [])
+check_truthy("empty hash", {})
+=end
+
+# while or until
+=begin
+x = 1
+n = 2
+while x <= 10 # -) while loop executes the block while the given condition is met
+    puts "#{n} * #{x} = #{n * x}"
+    x += 1
+end
+
+until x === 20 # -) until loop executes the block while the conditional is false
+    puts "#{n} * #{x} = #{n * x}"
+    x += 1
+end
+
+=end
+
+# flip-flop operator inclusive
+=begin
+x = [2, 2, 1, 6, 3, 4, 5, 1]
+selected_elements = x.select do |e|
+  (2..4).include?(e)
+end
+p selected_elements
+
+=end
+
+# or-Equa -) ||=
+
+# throw, catch
+=begin
+catch(:out) do
+    catch(:nested) do
+        puts "nested"
+    end
+    puts "before"
+    throw :out
+    puts "will not be executed"
+end
+puts "after"
+
+=end
+
+# break, next and redo
+=begin
+actions = %w(run jump swim exit macarena)
+index = 0
+while index < actions.length
+    action = actions[index]
+    index += 1
+    next if action == "exit" # next statement will return to the top of the block immediately, and proceed with the next iteration
+    break if action == "exit" # break statement will exit the block immediately.
+    puts "Currently doing this action: #{action}"
+end
+
+actions2 = %w(run jump swim sleep macarena)
+index = 0
+repeat_count = 0
+while index < actions2.length
+    action = actions2[index]
+    puts "Currently doing this action: #{action}"
+    if action == "sleep"
+        repeat_count += 1
+        redo if repeat_count < 4
+    end
+    index += 1
+end
+
+=end
+
+# Block result items
+=begin
+even_value = for value in [1, 2, 3, 4]
+                 break value if value.even?
+end
+puts "The first even value is: #{even_value}"
+
+def foo
+    bar = [1, 2, 3, 4].map do |x|
+        return 0 if x.even? # -) 0
+        x
+    end
+    puts 'baz'
+    bar
+end
+p foo # 0
+def foo2
+    bar = [1, 2, 3, 4].map do |x|
+        next 0 if x.even? # -) [1,0,3,0]
+        x
+    end
+    puts 'baz'
+    bar
+end
+p foo2
+
+# begin, end
+# Begin blocks are not code blocks, like { ... } or do ... end; they cannot be passed to functions
+
+circum ||=
+    begin
+        radius = 7
+        tau = Math::PI * 2
+        tau * radius # -) begin block will return the value of the last statement in the block
+    end
+p circum
+
+=end
+
+# The or operator has lower precedence than and. Similarly, || has lower precedence than &&. The symbol forms
+# have higher precedence than the word forms
+# Yielding to block -) You can send a block to your method and it can call that block multiple times.
+=begin
+def simple(arg1,arg2)
+    puts "First we are here: #{arg1}"
+    yield
+    puts "Finally we are here: #{arg2}"
+    yield
+end
+simple('start','end') { puts "Now we are inside the yield" }
+
+def countdown(num)
+    num.times do |i|
+        yield(num-i)
+    end
+end
+
+countdown(4) { |n| puts "Number is #{n}"}
+=end
+
+# Default parameter
+
+def make_animal_sound1(sound = 'Cuack')
+    puts sound
+end
+make_animal_sound1('Mooo') # Mooo
+make_animal_sound1 # Cuack
+
+def make_animal_sound2(sound = 'Cuack', volume = 11)
+    puts sound
+    puts volume
+end
+make_animal_sound2('Mooo', 10) # Mooo
+make_animal_sound2('Mooo', 10) # Mooo 10 -)  it's not possible to supply the second without also supplying the first
+
+# using positional parameter
+
+def make_animal_sound3(sound: 'Cuack', volume: 11)
+    puts sound
+    puts volume
+end
+make_animal_sound3(volume: 12) # Cuack 12
+
+# or hash parameter that stores
+
+def make_animal_sound4(options = {})
+    options[:sound] ||= 'Cuak'
+    options[:volume] ||= 11
+
+end
+make_animal_sound4(:sound => 'Mooo') # Mooo
+
+def welcome_guests(*guests)
+    guests.each { |guest| puts "Welcome #{guest}!" }
+end
+welcome_guests('usman') # Welcome Tom!
+welcome_guests('usman', 'ur', 'rehman')
+
+def my_mix(name,valid=true, *opt)
+    puts name
+    puts valid
+    puts opt
+end
+my_mix("usman") # usman true
+my_mix("usman", false) # usman true
+my_mix("usman", false, 2,4) # usman true [2,4]
 
