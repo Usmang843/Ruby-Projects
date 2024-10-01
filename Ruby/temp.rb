@@ -1,5 +1,6 @@
 
 
+
 # here is the output
 # puts 'Hello World' # pipes to the console
 
@@ -1075,6 +1076,7 @@ meal.add "Coffee"
 # -)  A hash in Ruby is an object that implements a hash table, mapping keys to values
 my_hash = {} # an empty hash
 # while all syntax versions can be mixed, the following is discouraged because key would be of one type
+=begin
 grades = { 'Mark' => 15, 'Jimmy' => 10, 'Jack' => 10 , [2,4] => 6, :name => 'usman'}
 p grades['Mark'] # 15
 # Also keys can be of any type, including complex ones
@@ -1103,15 +1105,708 @@ p authors2[:homer] += ['The Odyssey'] #  ['The Odyssey']
 p authors2[:plato] #  []
 p authors2 #  {:homer=>["The Odyssey"]}
 
+authors3 = Hash.new { |hash, key| hash[key] = [] }
+p authors3[:home] << 'The Lahore'
+p authors3[:plato]
+
+# Accessing value -) accessing a key which has not been added to the hash returns nil,
+my_hash = { length: 4, width: 5 }
+p my_hash[:length] # 4
+p my_hash[:height] = 9 # 9
+p my_hash # {:length=>4, :width=>5, :height=>9}
+
+my_hash = { "name" => "user" }
+p my_hash[:name] #  nil
+p my_hash["name"] #  user
+
+# -) situations where keys are expected or required to exist, hashes have a fetch method
+
+# my_hash.fetch(:age) # error
+# fetch accepts a default value as its second argument
+p my_hash.fetch(:age, 23) # 23
+p my_hash.fetch(:age) { 21 } # 21
+my_hash.fetch(:age) do |k|
+    puts "Could not find #{k}" # Could not find age
+end
+my_hash.store(:age, 23)
+p my_hash # {"name"=>"user", :age=>23}
+
+# get all values of a hash
+p my_hash.values
+# get all key of a hash
+p my_hash.keys
+
+h = { foo: {bar: {baz: 1}}}
+p h.dig(:foo, :bar, :baz) # => 1
+p h.dig(:foo, :zot, :xyz) # => nil
+g = { foo: [10, 11, 12] }
+p g.dig(:foo, 1) # 11
+
+hash = Hash.new { |h, k| h[k] = Hash.new &h.default_proc }
+hash[ :a ][ :b ][ :c ] = 3
+p hash # {:a=>{:b=>{:c=>3}}}
+
+# iterating over a hash -) Hash includes the Enumerable module -) Enumerable#each,
+# Enumerable#each_pair, Enumerable#each_key, and Enumerable#each_value
+
+h = { "first_name" => "John", "last_name" => "Doe" }
+h.each do |key, value|
+    puts "#{key} = #{value}"
+end
+
+# Filtering Hashes
+# SELECT returns a new hash with key-value pairs for which the block evaluates to true.
+{ :a => 1, :b => 2, :c => 3 }.select { |k, v| k != :a && v.even? } # {:b=>2}
+
+#  not need the key or value in a filter block
+{ :a => 1, :b => 2, :c => 3 }.select { |_, v| v.even? } # { :b => 2 }
+{ :a => 1, :b => 2, :c => 3 }.select { |k, _| k == :c } # { :c => 3 }
+
+# reject returns a new hash with key-value pairs for which the block evaluates to false
+{ :a => 1, :b => 2, :c => 3 }.reject { |_, v| v.even? } # => { :a => 1, :c => 3 }
+{ :a => 1, :b => 2, :c => 3 }.reject { |k, _| k == :b } # => { :a => 1, :c => 3 }
+
+# Conversion to and from Array
+{ :a => 1, :b => 2 }.to_a # => [[:a, 1], [:b, 2]]
+[[:x, 3], [:y, 4]].to_h # => { :x => 3, :y => 4 }
+Hash[:x, 1, :y, 2] # => { :x => 1, :y => 2 }
+Hash[ [[:x, 3], [:y, 4]] ] # => { :x => 3, :y => 4 }
+{ :a => 1, :b => 2 }.flatten # => [:a, 1, :b, 2]
+
+p Hash[('a'..'z').collect{ |c| [c, c.upcase] }] # => { 'a' => 'A', 'b' => 'B', ... }
+
+people = ['Alice', 'Bob', 'Eve']
+height = [5.7, 6.0, 4.9]
+p Hash[people.zip(height)] # => { 'Alice' => 5.7, 'Bob' => '6.0', 'Eve' => 4.9 }
 
 
+fruit = { name: 'apple', color: 'green', shape: 'round' }
+p fruit # {:name=>"apple", :color=>"green", :shape=>"round"}
+
+new_fruit = fruit.inject({}) { |memo, (k,v)| memo[k.to_s] = v.upcase; memo }
+p new_fruit # {"name"=>"APPLE", "color"=>"GREEN", "shape"=>"ROUND"}
+
+new_fruit2 = fruit.each_with_object({}) { |(k,v), memo| memo[k.to_s] = v.upcase }
+p new_fruit2 #  {"name"=>"APPLE", "color"=>"GREEN", "shape"=>"ROUND"}
+
+new_fruit3 = Hash[fruit.map{ |k,v| [k.to_s, v.upcase] }]
+p new_fruit3 #  {"name"=>"APPLE", "color"=>"GREEN", "shape"=>"ROUND"}
+
+# Operation on Hashes -) Intersection, Union(merge)
+hash1 = { :a => 1, :b => 2 }
+hash2 = { :b => 2, :c => 3 }
+hash1.select { |k, v| (hash2.include?(k) && hash2[k] == v) } # => { :b => 2 }
+
+hash1 = { :a => 1, :b => 2 }
+hash2 = { :b => 4, :c => 3 }
+hash1.merge(hash2) # => { :a => 1, :b => 4, :c => 3 }
+hash2.merge(hash1) # => { :b => 2, :c => 3, :a => 1 }
+
+=end
+
+# Blocks and Procs and Lamdas
+=begin
+# lambda using the arrow syntax -) ->
+hello_world = -> { 'Hello World!' }
+p hello_world[] # 'Hello World!'
+
+# lambda using the arrow syntax accepting 1 argument
+hello_world = ->(name) { "Hello #{name}!" }
+p hello_world['usman']  # "Hello usman!"
+
+the_thing = lambda do |magic, ohai, dere|
+    puts "magic! #{magic}"
+    puts "ohai #{dere}"
+    puts "#{ohai} means hello"
+end
+the_thing.call(1, 2, 3) # magic! 1 ohai 3 2 means hello
+the_thing[1,2,3] # magic! 1 ohai 3 2 means hello
+the_thing. (1, 2, 3) # magic! 1 ohai 3 2 means hello
+# the_thing[1,2,3,4] # error
+# the_thing.call(1,2) # error
+
+def try_proc # returning from a proc returns out of the enclosing scope
+    x = Proc.new {
+        return # Return from try_proc
+    }
+    x.call
+    puts "After x.call" # this line is never reached
+end
+
+def try_lambda # returning from within a lambda returns from the lambda
+    y = -> {
+        return # return from y
+    }
+    y.call
+    puts "After y.call" # this line is not skipped
+end
+try_proc # no output
+try_lambda # After y.call
+=end
+
+# Ruby doesn't have functions, but methods
+=begin
+def double(n)
+    n * 2
+end
+p double(2) # 4
+def triple(n)
+    lambda {3 * n}
+end
+p triple(2) # <Proc:0x00007304794576f8 (irb):6 (lambda)>
+p triple(2).call # 6
+
+# curry
+add = -> (a, b) { a + b }
+add_one = add.curry.(1) #  (λa.(λb.(a+b)))(1) which can be reduced to (λb.(1+b))
+add_two = add.curry.(2)
+
+=end
+
+# Objects as block arguments to methods -) Putting a & (ampersand) in front of an argument will pass it as the method's block.
+=begin
+class Greeter
+    def to_proc
+        Proc.new do |item|
+            puts "Hello, #{item}"
+        end
+    end
+end
+greet = Greeter.new
+arr = ['world', 'life']
+arr.each(&greet) #  Objects will be converted to a Proc using the to_proc method.
+
+class Symbol
+    def to_proc
+        Proc.new do |receiver|
+            receiver.send self
+        end
+    end
+end
+
+letter_counts = arr.map(&:length) # [5, 4]
+p letter_counts
+
+# converting to proc
+
+p [ 'rabbit', 'grass' ].map( &:upcase ) # => ["RABBIT", "GRASS"]
+
+output = method( :p )
+[ 'rabbit', 'grass' ].map( &output ) # => "rabbit\ngrass"
+=end
+
+# Blocks
+=begin
+4.times {puts "Hello World"}
+4.times {
+    print "Hello "
+    puts "usman"
+} # not recommended -) braces have higher precedence than do..end
+4.times do
+    print "Hello "
+    puts "usman"
+end
+
+# Yeilding -) yield is called without a block it will raise a LocalJumpError
+
+def block_caller
+    puts "some code"
+    if block_given?
+        yield # puts "My own block"
+    else
+        puts "block is not given"
+    end
+    puts "other code"
+end
+block_caller # the block is passed as an argument to the method.
+block_caller { puts "My own block" } # the block is passed as an argument to the method.
+
+def yield_n(n)
+    p = yield n if block_given?
+    p || n
+end
+yield_n(12) {|n| n + 7 } # 19
+yield_n(4) # 4
 
 
+my_variable = 8
+3.times do |x|
+    my_variable = x
+    puts my_variable
+end
+puts my_variable
+=end
+# Each
+=begin
+# |i| this means that each element in the range is represented within the block by the identifier i
+(1..10).each { |i| puts i.even? ? 'even' : 'odd' } # inline
+
+(1..10).each do |i| # multiline
+  if i.even?
+    puts 'even'
+  else puts 'odd'
+  end
+end
+
+arr = [1,2,3,4]
+puts arr.inspect # output is [1,2,3,4]
+print "Reversed array elements["
+arr.reverse_each do |val|
+    print " #{val} " # output is 4 3 2 1
+end
+print "]\n"
+
+# Implementation in a class
+
+class NaturalNumbers
+    include Enumerable
+    def initialize(upper_limit)
+        @upper_limit = upper_limit
+    end
+    def each(&block)
+        0.upto(@upper_limit).each(&block)
+    end
+end
+n = NaturalNumbers.new(4)
+p n.reduce(:+) # => 10
+p n.select(&:even?) # => [0, 2, 4]
+p n.map { |number| number ** 2 } # => [0, 1, 4, 9, 16]
+#
+
+# iterating over complex objects
+[[1, 2], [3, 4]].each { |(a, b)| p "a: #{ a }", "b: #{ b }" } #-) "a: 1" "b: 2" "a: 3" "b: 4"
+{a: 1, b: 2, c: 3}.each { |pair| p "pair: #{ pair }" } #-) "pair: [:a, 1]" "pair: [:b, 2]" "pair: [:c, 3]"
+
+=end
+
+# for iterator
 
 
+# (1..10).each { |i| puts i.even? ? 'even' : 'odd' } # inline
+
+# (1..10).each do |i| # multiline
+#   if i.even?
+#     puts 'even'
+#   else puts 'odd'
+#   end
+# end
+
+# arr = [1,2,3,4]
+# puts arr.inspect # output is [1,2,3,4]
+# print "Reversed array elements["
+# arr.reverse_each do |val|
+#     print " #{val} " # output is 4 3 2 1
+# end
+# print "]\n"
+
+# for iteration
+=begin
+for i in 4..13
+    # puts "this is #{i}.th number"
+end
+
+names = ['usman', 'ur', 'rehman', 'rasheed']
+
+for name in names
+    # puts name
+end
+
+=end
+
+# iteration with index
+=begin
+[2,3,4].map.with_index { |e, i| puts "Element of array number #{i} => #{e}" }
+[2,3,4].map.with_index(1) { |e, i| puts "Element of array number #{i} => #{e}" } # optional parameter
+[2,3,4].each_with_index { |e, i| puts "Element of array number #{i} => #{e}" } # diff with with_index is parameter not allowed
+
+# Map
+
+arr = [1, 2, 3]
+arr.map { |i| i + 1 } # => [2, 3, 4]
+arr # => [1, 2, 3]
+
+=end
+
+# Exception -) implicit exception handling like def, class, and module.
+# A rescue clause is analogous to a catch block
+=begin
+begin
+    # an execution that may fail
+    rescue FirstError, SecondError => e # do something if a FirstError or SecondError occurs
+    rescue => e # do something if a StandardError occurs
+end
+# If you failed to handle an exception, you can raise it any time in a rescue block.
+begin
+    #here goes your code
+rescue => e
+    #failed to handle
+    raise e
+end
+# If you want to retry your begin block, call retry -) You can be stuck in a loop if you catch an exception in every retry
+begin
+    #here goes your code
+rescue StandardError => e
+    #for some reason you want to retry you code
+    if retry_count < 5
+        retry_count = retry_count + 1
+        retry
+    else
+        #retry limit exceeds, do something else
+    end
+end
+# Exception handling
+begin
+    # an execution that may fail
+rescue
+    # something to execute in case of failure
+else
+    # something to execute in case of success
+ensure
+    # something to always execute
+end
+# If you are inside a def, module or class block, there is no need to use the begin statement
+
+def foo
+ # ...
+rescue
+ # ...
+end
+
+# Raising an exception
+def hello(subject)
+    raise ArgumentError, "`subject` is missing" if subject.to_s.empty?
+    puts "Hello #{subject}"
+end
+
+# hello # => ArgumentError: `subject` is missing
+hello("usman") # => "Hello usman"
+=end
+
+# Adding information to custom exceptions
+=begin
+class CustomError < StandardError
+    attr_reader :safe_to_retry
+    def initialize(safe_to_retry = false, message = 'Something went wrong')
+        @safe_to_retry = safe_to_retry
+        super(message)
+    end
+end
+raise CustomError.new(true)
+begin
+    # do stuff
+rescue CustomError => e
+    retry if e.safe_to_retry
+end
+
+=end
+
+# Enumerator -) is an object that implements iteration in a controlled fashion
+# custom enumerator
+# The object enumerates values as needed.
+# Execution of the loop is paused until the next value is requested by the owner of the object.
+=begin
+fibonacci = Enumerator.new do |yielder|
+    a = b = 1
+    loop do
+        yielder << a
+        a, b = b, a + b
+    end
+end
+
+p fibonacci.take 10
+# iteration method such as each is called without a block, an Enumerator should be returned
+# enum_for -) existing method
+def each
+    return enum_for :each unless block_given? # <Enumerator: main:each>
+    yield :x
+    yield :y
+    yield :z
+end
+p each { |x,y,z| puts x,y,z }
+p each.drop(0).map(&:upcase).first
+
+# Rewinding -) to restart the enumerator
+N = Enumerator.new do |yielder|
+    x = 0
+    loop do
+        yielder << x
+        x += 1
+    end
+end
+p N.next # 0
+p N.next # 1
+p N.next # 2
+p N.next # 3
+p N.next # 4
+N.rewind
+p N.next # 0
+
+=end
+
+# Enumerable module
+# map method is the iterator and also return the copy of transformed collection
+# each block will throw the array because this is just the iterator. Each iteration, does not actually alter each element in the iteration
+=begin
+CountriesName = ["India", "Canada", "America", "Iraq"]
+for country in CountriesName # for loop
+    # puts country
+end
+CountriesName.each do |country| # Each iterate over every single element of the array
+    # puts country
+end
+CountriesName.each_with_index do |country, index| # provides the element for the current iteration and index of the element
+    # puts country + " " + index.to_s
+end
+CountriesName.each_index do |index| #  index at which the element is placed
+    # puts CountriesName[index]
+end
+
+newArr = []
+newArr = CountriesName.map do |x| # fetch the transformed copy of the array
+  x
+end
+p newArr
+newArr1 = CountriesName.each do |x| # fetch the transformed copy of the array
+    x.upcase
+end
+p newArr1 # is just an iterator, doesn't alter the element in the iteration
+
+newArr2 = CountriesName.map {|x| x.upcase} # map can written as this statement
+p newArr2 # map is an iterator with the copy of transformed collection
+
+newArr2 = CountriesName.map! {|x| x.upcase} # returned the modified not the copy of the modified collection
+p CountriesName
+
+newArr = CountriesName.each_with_index.map do |value, index| # combining -)  each_with_index &&  map
+    if ((index%2).eql?0)
+        puts "Value is #{value} and the index is #{index}"
+    end
+end
+
+MixedArray = [1, "India", 2, "Canada", "America", 4]
+MixedArray.select do |v| # -) select method fetches the result based on satifying certain condition
+  p (v.class).eql?Integer
+end
 
 
+arr = [1,2,3,4,5]
+sum = arr.inject(0) do |sum, x| # -) reduces the collection to a certain final value.
+  puts x
+  sum = sum + x
+end
+p sum
+=end
+
+# Classes
+
+class Customer
+    attr_reader :name
+    def initialize(name) # -) class can have only one constructor, that is a method called initialize
+        @name = name.capitalize
+    end
+end
+name1 = Customer.new('usman')
+# p name1.name # 'Usman'
+
+# Creating a class
+class MyClass
+end
+myclass_obj = MyClass.new
+# p myclass_obj # <MyClass:0x00007fd00058d450>
+
+# Access Levels -) private, public and protected
+=begin
+class Cat
+    def initialize(name)
+        @name = name
+    end
+    def speak
+        age = calculate_cat_age # here we call the private method
+        puts "I'm #{@name} and I'm #{age} years old"
+    end
+    private
+    def calculate_cat_age
+        2 * 3 - 4
+    end
+end
+
+my_cat = Cat.new("Bilbo")
+my_cat.speak #=> I'm Bilbo and I'm 2 years old
+# my_cat.calculate_cat_age # error
+# protected -) , using the self ruby method, protected methods can be called within the context of an object of the same type.
+
+=end
+
+# Class Method types -) instance, singleton and class methods
+=begin
+class Thing
+    def somemethod
+        puts "something"
+    end
+    def self.other
+        puts "accessing method without creating an instance"
+    end
+    class << self # the anonymous class
+        def hello(name)
+            puts "Hello, #{name}!"
+        end
+    end
+end
+
+foo1 = Thing.new # create an instance of the class
+foo1.somemethod #  something
+Thing.other # accessing method without creating an instance
+Thing.hello('usman')
 
 
+foo2 = Thing.new
+def foo2.singletonmethod
+    puts "creating the singleton method of object which can be access by only object which it defined"
+end
+foo2.singletonmethod
+# foo1.singletonmethod # error -) can't be access by object which it not defined by it
 
+foo3 = Thing.new
+class << foo3
+    def singletonmth
+        puts "another way of defining singleton method through the object"
+    end
+end
+foo3.singletonmth
 
+=end
+
+# instance variable with getter and setter
+=begin
+class Cat
+    attr_reader :age # you can read the age but you can never change it
+    attr_writer :name # you can change name but you are not allowed to read
+    attr_accessor :breed # you can both change the breed and read it
+    def initialize(name, breed)
+        @name = name
+        @breed = breed
+        @age = 23
+    end
+    def speak
+        puts "My name is #{@name} and I am a #{@breed} and my age is #{@age}"
+    end
+end
+
+my_cat = Cat.new("Banjo", "birman")
+# reading values
+my_cat.age # 2 -) can read from the class
+# my_cat.name # Error -) only have write to change can't read
+my_cat.breed # "birman" -) can read and write both
+# changing values
+# my_cat.age = 3 #  Error -) can only read
+my_cat.name = "usman" # -) can only write
+my_cat.breed = "man" # -) can read and write both
+my_cat.speak #  My name is usman and I am a man and my age is 23
+
+=end
+
+# Dynamic class creation
+=begin
+MyClass = Class.new # create a new class dynamically
+my_class = MyClass.new # instantiate an object of type MyClass
+Duck =
+    Class.new do
+        def quack
+            'Quack!!'
+        end
+    end
+duck = Duck.new
+p duck.quack
+
+=end
+
+# Instance variables, preceded by @
+# class variables, preceded by @@
+# global variables, preceded by $
+=begin
+$total_person = 0
+class Person
+    @@persons_created = 0 # class variable, available to all objects of this class
+    def initialize(name, age)
+        my_age = age # local variable, will be destroyed at end of constructor
+        @name = name # instance variable, is only destroyed when the object is
+        @@persons_created += 1 #-) modification of class variable persists across all objects of this class
+        $total_person += 1
+    end
+    def some_method
+        puts "My name is #{@name}." # we can use @name with no problem
+    end
+
+    def another_method
+        puts "My age is #{my_age}." # this will not work!
+        # puts "My age is #{@age}." # this will work! -) not assigned a value
+    end
+    def how_many_person
+        puts "person created so far is = #{@@persons_created}"
+    end
+end
+mhmd = Person.new("usman", 23)
+mhmd2 = Person.new("ur", 23)
+mhmd3 = Person.new("rehnam", 23)
+
+mhmd.some_method #=> My name is Mark.
+# mhmd.another_method #=> throws an error
+
+mhmd.how_many_person
+puts $total_person
+
+=end
+
+# Inhertiance
+
+class Animal
+def say_hello
+    'Meep!'
+end
+def eat
+    'Yumm!'
+end
+end
+class Dog < Animal # Dog is child class and it's inheriting from Animal -) parent class
+    def say_hello #  overrides the say_hello method with different functionality
+        'Woof!'
+    end
+end
+spot = Dog.new
+p spot.say_hello # 'Woof!'
+p spot.eat # 'Yumm!'
+
+class A
+    @@classfoo  = 0 # shared between the base class and all subclasses as 1 variable
+    @foo = 'usman'
+    class << self
+        attr_accessor :foo
+    end
+    attr_accessor :uho
+    def initialize
+        @@classfoo += 1
+        @uho = "hahaha"
+        puts @@classfoo
+    end
+    WOO = 4
+    def self.boo1; p 'hoo' end
+    def boo2; p 'boo' end
+end
+
+class B < A; end
+class C < A
+    def initialize
+        @@classfoo = -4
+        puts @@classfoo
+    end
+end
+
+b = B.new # 1
+c = C.new # -4
+B.boo1 #  'hoo' # can inherited class method
+p B::WOO # 4 -) can inherit Constant -) be aware, can be overridden through other class
+b.boo2 # 'boo' # can inherited methods
+p b::WOO rescue puts "can't access WOO directly"
+p b.uho # can inherit instance variable
+p c.uho # nil -) if you override that initialize instance variables without calling super, they will be nil
+p B.foo # nil -) Class instance variables are not inherited:
