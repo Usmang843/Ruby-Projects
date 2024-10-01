@@ -1758,7 +1758,7 @@ puts $total_person
 =end
 
 # Inhertiance
-
+=begin
 class Animal
 def say_hello
     'Meep!'
@@ -1810,3 +1810,6 @@ p b::WOO rescue puts "can't access WOO directly"
 p b.uho # can inherit instance variable
 p c.uho # nil -) if you override that initialize instance variables without calling super, they will be nil
 p B.foo # nil -) Class instance variables are not inherited:
+
+=end
+
