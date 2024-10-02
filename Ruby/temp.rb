@@ -35,7 +35,7 @@ a += 1 unless a = 5
 =end
 
 # defining class
-
+=begin
 class Foo
     def **(x) # here ** is the function name
     puts "Raising to the power of #{x ** 2}"
@@ -74,6 +74,7 @@ class Foo
         false
     end
 end
+=end
 
 =begin
 f = Foo.new
@@ -1840,7 +1841,7 @@ sc.class.method_static # This is an static method
 =end
 
 # Method missing
-
+=begin
 class Animal
     def method_missing(method, *args, &block)
         "Cannot call #{method} on Animal"
@@ -1879,16 +1880,301 @@ p animal.say_usman # usman
 p animal.say_usman("shout") # USMAN
 # p animal.say2_moo # calling super -) NoMethodError
 
+=end
 
+# Regular Expression and Regex Based Operation
+=begin
+if /hay/ =~ 'haystack' # -) /../ regex =~ str
+    puts "There is hay in the word haystack"
+else
+  puts "regex value is not equal to string"
+end
 
+case "Ruby is #1!"
+when /\APython/ #-) \A asserts the position at the start of the string
+    puts "Boooo."
+when /\ARuby/
+    puts "You are right."
+else
+    puts "Sorry, I didn't understand that."
+end
 
+name_reg = /h(i|ello), my name is (?<name>.*)/i #i means case insensitive
+# .* means "match any character (.) zero or more times (*)", which will capture everything until the end of the string.
+name_input1 = "Hello, my name is Zaphod Beeblebrox"
+name_input2 = "HELLO, my name is Zaphod Beeblebrox"
+name_input3 = "ELLO, my name is Zaphod Beeblebrox"
 
+match_data = name_input1.match(name_reg)
+p match_data
+match_data = name_reg.match "Hi, my name is Usman Ur Rehman!"
+p match_data
+match_data1 = name_reg.match(name_input1)
+p match_data1
+match_data2 = name_reg.match(name_input2)
+p match_data2
+match_data3 = name_reg.match(name_input3) # nil -) # not match with regex
+p match_data3
 
+if match_data.nil? #Always check for nil! Common error.
+    puts "No match"
+else
+  p match_data[0] # "Hi, my name is Usman Ur Rehman!" -) return the full string match
+  p match_data[1] # Usman Ur Rehman! -)
+  p match_data[2] #=> nil -) Because it was a named group, we can get it by name
+  p match_data[:name] #=> "Usman Ur Rehman!"
+  p match_data["name"] #=> "Usman Ur Rehman!"
+    puts "Hello #{match_data[:name]}!"
+end
 
+reg = /(((a)b)c)(d)/
+match = reg.match 'abcd'
+p match
+p match[0] #=> "abcd"
+p match[1] #=> "abc"
+p match[2] #=> "ab"
+p match[3] #=> "a"
+p match[4] #=> "d"
 
+=end
 
+# Quantifiers
+=begin
+/a?/ # Zero or one:
+/a*/ # Zero or many:
+/a+/ # One or many:
 
+reg =  /a{2,4}/ # Two, three or four
+p matchV = reg.match('aa') # match
+p matchV = reg.match('aaa') # match
+p matchV = reg.match('aaaa') # match
+p matchV = reg.match('aaaa2a') # matches the 2-4 first
+p matchV = reg.match('a') # nil
 
+reg2 = /a{2,}/ # Two or more
+p matchV = reg2.match('aa') # match
+p matchV = reg2.match('aaa') # match
+p matchV = reg2.match('aaaa') # match
+p matchV = reg2.match('aaaa2a') # matches the 2-4 first
+p matchV = reg2.match('a') # nil
 
+reg3 =  /a{,4}/ # Less than four (including zero)
+p matchV = reg3.match('aa') # match
+p matchV = reg3.match('aaa') # match
+p matchV = reg3.match('aaaa') # match
+p matchV = reg3.match('aaaa2a') # matches the 2-4 first
+p matchV = reg3.match('a') # match
 
+string = "My not so long string"
+p string
+p string[/so/] # so
+p string[/present/] # nil
+p string[/present/].nil? # true
+p string[/(n.t).+(l.ng)/, 2] # long -) 2 denotes you're capturing second matching group
+p string[/(n.t).+(l.ng)/, 1] # not -) 1 denotes you're capturing first matching group
+p string.sub(/(n.t).+(l.ng)/, '\1 \2' ) # removing so
+p string.gsub(/(n.t).+(l.ng)/, '\1 very \2' ) # replacing so with very
+
+#The following forms are equivalent
+regexp_slash = /hello/
+regexp_bracket = %r{hello}
+regexp_new = Regexp.new('hello')
+string_to_match = "hello world!"
+#All of these will return a truthy value
+p string_to_match =~ regexp_slash # => 0 -) showing the at index match
+p string_to_match =~ regexp_bracket # => 0
+p string_to_match =~ regexp_new # => 0
+p "world hello" =~ regexp_slash # 6
+
+# ^ -) Start of line
+# $ -) End of line
+# \A -) Start of string
+# \Z -) End of string, excluding any new line at the end of string
+# \z -) End of string
+# . -) Any single character
+# \s -) Any whitespace character
+# \S -) Any non-whitespace character
+# \d -) Any digit
+# \D -) Any non-digit
+# \w -) Any word character (letter, number, underscore)
+# \W -) Any non-word character
+# \b -) Any word boundary
+
+=end
+
+# Ruby Access Modifiers
+=begin
+class Sequence
+    include Enumerable
+    def initialize(from, to, by)
+        @from = from
+        @to = to
+        @by = by
+    end
+    def each
+        x = @from
+        while x < @to
+            yield x
+            x = x + @by
+        end
+    end
+    def *(factor)
+        Sequence.new(@from*factor, @to*factor, @by*factor)
+    end
+    def +(offset)
+        Sequence.new(@from+offset, @to+offset, @by+offset)
+    end
+end
+object = Sequence.new(1,10,2)
+object1 = Sequence.new(1,10,3)
+
+object.each do |x|
+    puts x # 1 3 5 7 9
+end
+object1.each do |x|
+    puts x # 1 4 7
+end
+
+=end
+
+# Loading Source Files
+
+# require 'awesome_print'
+# require_relative 'myproj/version' -) load files relative to the file
+
+#  Automatically loading source files
+# autoload :MyModule, '/usr/local/lib/modules/my_module.rb'
+
+# Loading optional files -) loadError if file not found
+=begin
+module TidBits
+    @@unavailableModules = []
+    [
+        { name: 'CoreExtend', file: 'core_extend/lib/core_extend' } \
+ , { name: 'Fs' , file: 'fs/lib/fs' } \
+ , { name: 'Options' , file: 'options/lib/options' } \
+ , { name: 'Susu' , file: 'susu/lib/susu' } \
+].each do |lib|
+        begin
+            require_relative lib[ :file ]
+        rescue LoadError
+            @@unavailableModules.push lib
+        end
+    end
+end # module TidBits
+=end
+
+# Loading file repeatedly
+# load 'somefile'
+
+# Range
+=begin
+p (10..1).to_a # []
+p (1...3).to_a # [1, 2]
+p (-6..-1).to_a # [-6, -5, -4, -3, -2, -1]
+p ('a'..'e').to_a # ["a", "b", "c", "d", "e"]
+p ('a'...'e').to_a # ["a", "b", "c", "d"]
+p Range.new(1,3).to_a # [1, 2, 3] -) default false
+p Range.new(1,3,true).to_a # [1, 2]
+
+(1..5).each do |i|
+  p i
+end
+
+=end
+
+# Module
+=begin
+module Foo
+    def foo_method
+        puts 'foo_method called!'
+    end
+end
+module Bar
+    def bar_method
+        puts 'bar_method called!'
+    end
+end
+module SomeMixin
+    def extendfoo
+        puts "Extend foo!"
+    end
+end
+
+class Baz
+    include Foo
+    include Bar
+    extend SomeMixin
+    def baz_method
+        puts 'baz_method called!'
+    end
+end
+new_baz = Baz.new
+new_baz.baz_method # baz_method called!
+new_baz.bar_method # bar_method called!
+new_baz.foo_method # foo_method called!
+# new_baz.extendfoo # error -) method was NOT added to the instance
+Baz.extendfoo
+
+module Namespace
+    module Child
+        class Foo;
+            puts "Child module have class"
+        end
+        puts "module in another module"
+    end # module Child
+    # Child::Foo # Foo can now be accessed as
+end # module Namespace
+
+Namespace::Child::Foo # Foo can now be accessed as
+
+=end
+
+# Recursion
+def gdc (x, y)
+    return x if y == 0
+    return gdc(y, x%y)
+end
+v = gdc(2,4)
+# p v
+
+def fact(x, acc=1)
+    return acc if x <= 1
+    return fact(x-1, x*acc)
+end
+v = fact(4)
+# p v
+
+class Bakery
+    attr_accessor :selected_packs
+    def initialize
+        @packs = [5,3] # pack sizes 5 and 3
+        @selected_packs = []
+    end
+    def allocate(qty) # 16 | 11 | 6 | 1 | 3
+        remaining_qty = nil
+        @packs.each do |pack| # 5 | 5 | 5 | 5 | 3 | 5 | 3
+            remaining_qty = qty - pack # 16 - 5 | 11 - 5 | 6 - 5 | 1 - 5 | 1 - 3 | 6 - 3 | 3 - 5 | 3 - 3
+            # Since both checks (remaining_qty > 0 and remaining_qty == 0) fail, the method ends,
+            # returning remaining_qty (-4) to the previous call (allocate(6)).
+            if remaining_qty > 0
+                # p allocate(remaining_qty)
+                ret_val = allocate(remaining_qty) # allocate(11) | allocate(6) | allocate(1) | allocate(3)
+                if ret_val == 0
+                    @selected_packs << pack # [3] | ,
+                    remaining_qty = 0
+                    break
+                end
+            elsif remaining_qty == 0
+                @selected_packs << pack
+                break
+            end
+        end
+        remaining_qty
+    end
+end
+
+bakery = Bakery.new
+bakery.allocate(16)
+puts "Pack combination is: #{bakery.selected_packs.inspect}"
 
