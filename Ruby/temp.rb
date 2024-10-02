@@ -1813,3 +1813,82 @@ p B.foo # nil -) Class instance variables are not inherited:
 
 =end
 
+# Mixins
+=begin
+module SampleModule
+    def self.included(base)
+        base.extend ClassMethods
+    end
+    module ClassMethods
+        def method_static
+        puts "This is a static method"
+        end
+    end
+    def insta_method
+        puts "This is an instance method"
+    end
+end
+
+class SampleClass
+    include SampleModule
+end
+
+sc = SampleClass.new
+sc.insta_method # This is an instance method
+sc.class.method_static # This is an static method
+
+=end
+
+# Method missing
+
+class Animal
+    def method_missing(method, *args, &block)
+        "Cannot call #{method} on Animal"
+    end
+end
+p Animal.new.say_moo # cannot call say_moo on Animal
+class Animal
+    def method_missing(method, *args, &block)
+        if method.to_s == 'say'
+            block.call
+        else
+            super # default behaviour for method_missing -) NoMethodError
+        end
+    end
+end
+# say is not a defined method in Animal, method_missing is triggered, recognizes that the method is say, and executes the block.
+p Animal.new.say{ 'moo' } # calling with block -) 'moo'
+# p Animal.new.say2 {'mue'} # NoMethodError
+
+class Animal
+    def method_missing(method, *args, &block)
+        say, speak = method.to_s.split("_")
+        if say == "say" && speak
+            return speak.upcase if args.first == "shout"
+            speak
+        else
+            super
+        end
+    end
+end
+animal = Animal.new
+p Animal.new.say_moo # using parameter -)'moo'
+p animal.say_moo # moo
+p Animal.new.say_usman ('shout') # # using parameter -) 'USMAN'
+p animal.say_usman # usman
+p animal.say_usman("shout") # USMAN
+# p animal.say2_moo # calling super -) NoMethodError
+
+
+
+
+
+
+
+
+
+
+
+
+
+
