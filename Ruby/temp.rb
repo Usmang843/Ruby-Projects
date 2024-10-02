@@ -2178,3 +2178,125 @@ bakery = Bakery.new
 bakery.allocate(16)
 puts "Pack combination is: #{bakery.selected_packs.inspect}"
 
+# splat operator (*)
+=begin
+def print_spouses(person, *spouses)
+    spouses.each do |spouse|
+        puts "#{person} married #{spouse}."
+    end
+end
+# print_spouses('usman', 'Conrad', 'Michael', 'Mike', 'Eddie', 'Richard', 'John', 'Larry')
+bonaparte = ['Napoleon','Joséphine','Marie Louise']
+# print_spouses(*bonaparte)
+
+=end
+
+# JSON with Ruby
+=begin
+require 'json'
+j = '{"a": 1, "b": 2}'
+puts JSON.parse(j) # {"a"=>1, "b"=>2}
+
+# generating JSON out of a Ruby hash is as simple as parsing
+hash = { 'a' => 1, 'b' => 2 }
+json = hash.to_json
+puts json # {"a":1,"b":2}
+=end
+
+# Destructuring
+=begin
+a, b = [0,1] # a=0, b=1
+p a , b
+a, *rest = [0,1,2,3]  # a=0, rest=[1,2,3]
+p a , rest
+a, * = [0,1,2,3] # a=0  -) Equivalent to .first
+p a
+*, z = [0,1,2,3]  # z=3 -) Equivalent to .last
+p z
+
+triples = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+triples.each { |(first, second, third)| puts second } # 2 5 8
+p triples.map { |(first, *rest)| rest.join(' ') } # ["2 3", "5 6", "8 9"]
+
+=end
+
+# keyword Argument
+=begin
+def say(**args)
+    puts args
+    puts args[:message] || "Message not found"
+end
+say foo: "1", bar: "2" # {:foo=>"1", :bar=>"2"}
+say message: "Hello Usman!"
+
+def say2(message: nil, before: "<p>", after: "</p>")
+    puts "#{before}#{message}#{after}"
+end
+args = { message: "Hello World", after: "</p><hr>" }
+say2(**args) # <p>Hello World</p><hr>
+args = { message: "Hello World", foo: "1" }
+# say2(**args) # error -) unknown keyword :foo
+
+def inner(foo:, bar:)
+    puts foo, bar
+end
+def outer(something, foo: nil, bar: nil, baz: nil) # something is required because not assign any default value
+    puts something
+    params = {}
+    params[:foo] = foo || "Default foo"
+    params[:bar] = bar || "Default bar"
+    inner(**params)
+end
+
+outer "Hello Usman "# Hello Usman Default foo Default bar
+outer "Hello Usman", foo: "Custom foo" # Hello Usman Custom foo Default bar
+
+=end
+
+# Catching Exception with Begin/Rescue
+=begin
+def divide(x, y)
+    begin
+        print "Division: "
+        z = x/y
+    rescue ZeroDivisionError
+        puts "Don't divide by zero!"
+        y = 1
+        retry
+        # return nil
+    rescue TypeError
+        puts "Division only works on numbers!"
+        # return nil
+    rescue => e
+        # puts "There was an error"
+        puts "There was a %s (%s)" % [e.class, e.message]
+        # puts e.backtrace
+    else
+        puts "There is no error in this code: "
+        return z
+    ensure # If the ensure clause has a return that will override the return value of any other clause!
+        puts "Either error or resolved it always run"
+    end
+
+
+end
+p divide(4,2) # 2
+p divide(4, 0) # Don't divide by zero -) by retry it return 4
+p divide(4, 'a') # Division only works on numbers
+p divide('a', 4) # There was a NoMethodError (undefined method `/' for nil:NilClass)
+p divide(nil, 2) # There was a NoMethodError (undefined method `/' for nil:NilClass)
+
+=end
+
+# Debugging
+# $ gem install pry-byebug # -) install pry-byebug gem
+# require 'pry-byebug' # -) top of your .rb
+# binding.pry # -) wherever you want breakpoint
+
+# following .rb file
+require 'pry-byebug'
+def hello_world
+    puts "Hello"
+    binding.pry # break point here
+    puts "World"
+end
