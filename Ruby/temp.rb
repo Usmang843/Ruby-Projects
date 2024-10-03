@@ -2147,36 +2147,42 @@ v = fact(4)
 
 class Bakery
     attr_accessor :selected_packs
+
     def initialize
-        @packs = [5,3] # pack sizes 5 and 3
+        @packs = [5, 3] # pack sizes 5 and 3
         @selected_packs = []
     end
-    def allocate(qty) # 16 | 11 | 6 | 1 | 3
-        remaining_qty = nil
-        @packs.each do |pack| # 5 | 5 | 5 | 5 | 3 | 5 | 3
-            remaining_qty = qty - pack # 16 - 5 | 11 - 5 | 6 - 5 | 1 - 5 | 1 - 3 | 6 - 3 | 3 - 5 | 3 - 3
-            # Since both checks (remaining_qty > 0 and remaining_qty == 0) fail, the method ends,
-            # returning remaining_qty (-4) to the previous call (allocate(6)).
-            if remaining_qty > 0
-                # p allocate(remaining_qty)
-                ret_val = allocate(remaining_qty) # allocate(11) | allocate(6) | allocate(1) | allocate(3)
-                if ret_val == 0
-                    @selected_packs << pack # [3] | ,
-                    remaining_qty = 0
-                    break
-                end
-            elsif remaining_qty == 0
-                @selected_packs << pack
-                break
+
+    def allocate(qty) # Main allocation method
+        @selected_packs = [] # Reset selected packs for each allocation
+        allocate_helper(qty)
+    end
+
+    private
+
+    def allocate_helper(qty) # Helper method for recursion -) 16 | 11 | 6
+        return true if qty == 0 # Found a valid allocation
+        return false if qty < 0 # Over allocation, invalid
+
+        @packs.each do |pack| # Try each pack
+            @selected_packs << pack # Choose this pack -) 5 | [5,5] | [5,5,5] | [5,5,5,3] -) Backtrack | [5,5,5] | [5,5,3]
+            if allocate_helper(qty - pack) # Recursively allocate remaining quantity
+                return true # If valid allocation found, return true
             end
+            @selected_packs.pop # Backtrack, remove the last pack
         end
-        remaining_qty
+
+        false # No valid allocation found
     end
 end
 
 bakery = Bakery.new
-bakery.allocate(16)
-puts "Pack combination is: #{bakery.selected_packs.inspect}"
+if bakery.allocate(16)
+    puts "Pack combination is: #{bakery.selected_packs.inspect}"
+else
+    puts "No valid pack combination found."
+end
+
 
 # splat operator (*)
 =begin
@@ -2289,6 +2295,7 @@ p divide(nil, 2) # There was a NoMethodError (undefined method `/' for nil:NilCl
 =end
 
 # Debugging
+=begin
 # $ gem install pry-byebug # -) install pry-byebug gem
 # require 'pry-byebug' # -) top of your .rb
 # binding.pry # -) wherever you want breakpoint
@@ -2299,4 +2306,11 @@ def hello_world
     puts "Hello"
     binding.pry # break point here
     puts "World"
+end
+
+=end
+x = 5
+while x >= 1 do
+  puts '*' * x
+  x = x -1
 end
