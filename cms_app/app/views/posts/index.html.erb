@@ -1,0 +1,55 @@
+<div class="container mx-auto mt-4">
+  <h1 class="text-xl font-bold">All Posts</h1>
+
+  <% if user_signed_in? %>
+    <div class="mb-4">
+      <%= link_to 'Create New Post', new_post_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+    </div>
+  <% end %>
+    <% if @posts.any? %>
+      <% @posts.each do |post| %>
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-4">
+          <%= link_to post.title, post_path(post), class: "text-2xl font-bold" %>
+          <p class="text-gray-700"><%= post.content %></p>
+          <p class="text-sm text-gray-500">Posted by <%= post.user.first_name %> <%= post.user.last_name %></p>
+
+          <!-- Display Likes and Comments -->
+          <p><%= pluralize(post.likes.count, 'Like') %> | <%= pluralize(post.comments.count, 'Comment') %></p>
+
+          <!-- Form to like the post -->
+          <!-- Check if the current user has liked the post -->
+          <% if post.likes.exists?(user_id: current_user.id) %>
+            <%= button_to "Unlike", [post, post.likes.find_by(user: current_user, post: post)], method: :delete, class: "bg-red-500 text-white px-4 py-2 rounded-lg" %>
+          <% else %>
+            <%= form_with(model: [post, Like.new], local: true) do |form| %>
+              <%= form.submit "Like", class: "bg-blue-500 text-white px-4 py-2 rounded-lg" %>
+            <% end %>
+          <% end %>
+
+          <!-- Form to add a comment -->
+          <%= form_with(model: [post, Comment.new], local: true) do |form| %>
+            <%= form.text_area :content, placeholder: "Add a comment", class: "w-full p-2 mt-2 border rounded-lg" %>
+            <%= form.submit "Comment", class: "bg-green-500 text-white px-4 py-2 rounded-lg mt-2" %>
+          <% end %>
+
+          <!-- Display comments -->
+          <div class="mt-4">
+            <h3 class="text-lg font-bold mb-2">Comments:</h3>
+            <% if post.comments.any? %>
+              <% post.comments.each do |comment| %>
+                <div class="border-t border-gray-200 pt-2">
+                  <!-- Display Commenter's Name and Comment Content -->
+                  <p><strong><%= comment.user.first_name %> <%= comment.user.last_name %>:</strong> <%= comment.content %></p>
+                  <p class="text-sm text-gray-500">Commented on <%= comment.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+                </div>
+              <% end %>
+            <% else %>
+              <p>No comments yet.</p>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+  <% else %>
+    <p>No posts to display.</p>
+  <% end %>
+</div>

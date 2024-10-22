@@ -1,0 +1,37 @@
+<!--View represent data in a particular format in an application for the user
+They do what controller tell them
+-->
+<h1>Helo here we start ruby on rails</h1>
+<p>This is our first project</p>
+<h3>We are getting data from databae through model</h3>
+<p>Our blog has total <%= Article.count %> articles!</p>
+Our blog has <%= Article.public_count %> articles public!
+
+<ul>
+  <% @articles.each do |article| %> <!-- evaluate the enclosed Ruby code -->
+    <% unless article.archived? %>
+      <li>
+        <%= link_to article.title, article %>
+      </li>
+    <% end %>
+  <% end %>
+</ul>
+<%= link_to "New Article", new_article_path %>
+
+<!--  <a href = "<%#= article_path(article) %>"> # article_path helper returns "/articles/#{article.id} -->
+<!--  <%#= article.title%> # evaluate the enclosed Ruby code, and output the value it returns -->
+<!--  </a> -->
+<!--
+A route maps a request to a controller action.
+A controller action performs the necessary work to handle the request, and prepares any data for the view.
+A view displays data in a desired format.
+A model is a Ruby class that is used to represent data
+Using a Model to Interact with the Database -) irb -) rails console
+ERB code in the view is evaluated to output HTML.
+Whenever we have such a combination of routes, controller actions, and views that work together to perform CRUD operations on an entity,
+we call that entity a resource
+Rails is smart enough to only execute the migrations that have not already been run against the current database
+Concerns are implemented using modules that contain methods representing a well-defined slice of the functionality that a model or controller is responsible for.
+Che
+
+-->
