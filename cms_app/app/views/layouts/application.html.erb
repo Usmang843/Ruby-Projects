@@ -16,14 +16,19 @@
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    
+
   </head>
 
-  <body>
+  <body class="relative min-h-[100vh] pb-20">
   <nav class="bg-gray-800 p-4">
-    <div class="container mx-auto">
+    <div class="container mx-auto flex items-center justify-between">
       <%= link_to "CMS", root_path, class: "text-white text-lg" %>
-      <div class="float-right">
+
+      <% if user_signed_in? %>
+        <span class="text-white"><%= current_user.first_name%> <%= current_user.last_name%></span>
+      <% end %>
+
+      <div class="flex items-center">
         <% if user_signed_in? %>
           <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "text-white ml-4" %>
         <% else %>
@@ -33,10 +38,11 @@
       </div>
     </div>
   </nav>
-  <main class="container mx-auto mt-28 px-5 flex flex-col">
+
+  <main class="container mx-auto mt-28  px-5 flex flex-col items-center">
     <%= yield %>
   </main>
-  <footer class="bg-gray-800 text-white text-center p-4 mt-4">
+  <footer class="bg-gray-800 text-white text-center p-6 mt-4 absolute bottom-0 w-full">
     <p>&copy; 2024 Usman Ur Rehman. All rights reserved.</p>
   </footer>
   </body>

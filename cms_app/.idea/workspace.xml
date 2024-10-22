@@ -11,10 +11,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6dfe3cfb-1613-461f-b4da-87d5350f4f34" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../blog/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../blog/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../blog/Gemfile" beforeDir="false" afterPath="$PROJECT_DIR$/../blog/Gemfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../blog/app/views/layouts/application.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/../blog/app/views/layouts/application.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../railBlog/Gemfile" beforeDir="false" afterPath="$PROJECT_DIR$/../railBlog/Gemfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/Ruby-Projects.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/cms_app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cms_app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Gemfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/devise/registrations/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/devise/registrations/new.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/devise/sessions/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/devise/sessions/new.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/layouts/application.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/layouts/application.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/posts/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/posts/index.html.erb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,9 +41,10 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../blog" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Ruby-on-Rail/cms_app" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.ruby.settings.RubyActiveModuleSdkConfigurable" />
   </component>
@@ -153,7 +162,7 @@
       <workItem from="1729486546375" duration="271000" />
       <workItem from="1729488125106" duration="17944000" />
       <workItem from="1729572323457" duration="8436000" />
-      <workItem from="1729581517764" duration="305000" />
+      <workItem from="1729581517764" duration="13353000" />
     </task>
     <servers />
   </component>
@@ -173,10 +182,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="743" y="278" width="424" height="486" key="FileChooserDialogImpl" timestamp="1729581583584">
+    <state x="743" y="278" width="424" height="486" key="FileChooserDialogImpl" timestamp="1729598566263">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="743" y="278" width="424" height="486" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1729581583584" />
+    <state x="743" y="278" width="424" height="486" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1729598566263" />
     <state x="464" y="155" key="SettingsEditor" timestamp="1729490160004">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -185,9 +194,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="624" y="236" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1729579605420" />
-    <state x="623" y="229" width="672" height="678" key="search.everywhere.popup" timestamp="1729577183576">
+    <state x="623" y="229" width="672" height="678" key="search.everywhere.popup" timestamp="1729584517821">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="229" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1729577183576" />
+    <state x="623" y="229" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1729584517821" />
   </component>
 </project>

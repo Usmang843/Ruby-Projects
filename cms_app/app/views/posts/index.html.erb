@@ -1,5 +1,5 @@
 <div class="container mx-auto mt-4">
-  <h1 class="text-xl font-bold">All Posts</h1>
+  <h1 class="text-xl font-bold mb-2">All Posts</h1>
 
   <% if user_signed_in? %>
     <div class="mb-4">
@@ -9,7 +9,11 @@
     <% if @posts.any? %>
       <% @posts.each do |post| %>
         <div class="bg-white p-6 rounded-lg shadow-lg mb-4">
-          <%= link_to post.title, post_path(post), class: "text-2xl font-bold" %>
+          <% if user_signed_in? && post.user == current_user %>
+            <%= link_to post.title, post_path(post), class: "text-2xl font-bold" %>
+            <% else %>
+            <p class="font-bold text-2xl"><%= post.title %></p>
+          <% end %>
           <p class="text-gray-700"><%= post.content %></p>
           <p class="text-sm text-gray-500">Posted by <%= post.user.first_name %> <%= post.user.last_name %></p>
 
