@@ -1,0 +1,76 @@
+<div class="w-full">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+  <% end %>
+
+  <% content_for :title, "Restaurants" %>
+
+  <div class="flex justify-around items-center">
+
+
+    <h1 class="font-bold text-4xl ml-0">Restaurants</h1>
+
+    <div class="flex justify-center items-center ml-5">
+      <%= form_with(url: search_restaurants_path, method: :get, local: true, class: "flex items-center space-x-2") do %>
+        <div class="w-full max-w-md">
+          <%= label_tag :query, "Search Restaurants", class: "block text-sm font-medium text-gray-700" %>
+          <div class="flex items-center">
+            <%= text_field_tag :query, params[:query], style: "width: 200px;", class: "block w-full border-gray-300 rounded-l-md shadow-sm focus:ring focus:ring-blue-500" %>
+            <%= submit_tag "Search", class: "bg-blue-600 text-white py-2 px-6 rounded-r-md" %>
+          </div>
+        </div>
+      <% end %>
+      <div class="w-full flex justify-center items-center ml-5 ">
+        <%= form_with(url: restaurants_path, method: :get, local: true, class: "flex items-center") do %>
+          <div class="w-full max-w-md">
+            <%= label_tag :min_price, "Min Price", class: "block text-sm font-medium text-gray-700" %>
+            <div class="flex items-center">
+              <%= number_field_tag :min_price, params[:min_price], style: "width: 100px;", class: "block w-32 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500" %>
+            </div>
+          </div>
+          <div class="w-full max-w-md">
+            <%= label_tag :max_price, "Max Price", class: "block text-sm font-medium text-gray-700" %>
+            <div class="flex items-center">
+              <%= number_field_tag :max_price, params[:max_price], style: "width: 100px;", class: "block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500" %>
+              <%= submit_tag "Filter", class: "bg-blue-600 text-white py-2 px-6 rounded-r-md" %>
+            </div>
+          </div>
+          </div>
+        <% end %>
+      </div>
+
+    <div class="flex items-center space-x-4 ml-5">
+      <%= form_with(url: restaurants_path, method: :get, local: true) do %>
+        <div class="flex space-x-2">
+          <div class="w-full max-w-md">
+            <label for="sort" class="text-sm font-medium text-gray-700">Sort By:</label>
+            <div class="flex items-center">
+              <select id="sort" name="sort" onchange="this.form.submit()" class="bg-white border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <option value="name" <%= 'selected' if params[:sort] == 'name' %>>Name</option>
+                <option value="address" <%= 'selected' if params[:sort] == 'address' %>>Address</option>
+                <option value="rating" <%= 'selected' if params[:sort] == 'rating' %>>Rating</option>
+              </select>
+              <select id="direction" name="direction" onchange="this.form.submit()" class="bg-white border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <option value="asc" <%= 'selected' if params[:direction] == 'asc' %>>Ascending</option>
+                <option value="desc" <%= 'selected' if params[:direction] == 'desc' %>>Descending</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+      <% end %>
+    </div>
+      <% if current_user&.role == 'admin' %>
+        <%= link_to "New restaurant", new_restaurant_path, class: "ml-5 mt-4 rounded-lg  bg-blue-600 text-white py-2 px-6 font-medium" %>
+      <% end %>
+  </div>
+
+  <div id="restaurants" class="flex flex-wrap">
+    <% @restaurants.each do |restaurant| %>
+      <%= render restaurant %>
+    <% end %>
+  </div>
+  <div class="flex items-center justify-center">
+    <%= will_paginate @restaurants %>
+  </div>
+</div>

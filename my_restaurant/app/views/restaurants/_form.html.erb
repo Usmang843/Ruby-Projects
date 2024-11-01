@@ -1,0 +1,109 @@
+<%= form_with(model: restaurant, class: "contents") do |form| %>
+  <% if restaurant.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <h2><%= pluralize(restaurant.errors.count, "error") %> prohibited this restaurant from being saved:</h2>
+
+      <ul>
+        <% restaurant.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :description %>
+    <%= form.textarea :description, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :address %>
+    <%= form.text_field :address, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :phone %>
+    <%= form.text_field :phone, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <!-- Existing Cuisines -->
+  <div id="cuisines">
+    <%= form.fields_for :cuisines do |cuisine_form| %>
+      <%= render 'cuisine_fields', cuisine_form: cuisine_form %>
+    <% end %>
+  </div>
+
+  <!-- Button to Add New Cuisines -->
+  <div class="flex justify-between mb-4">
+    <%= link_to 'Add Cuisine', '#', id: 'add-cuisine', class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+
+
+  <!-- Template for new cuisines (hidden) -->
+  <template id="cuisine-template">
+    <%= form.fields_for :cuisines, restaurant.cuisines.build, child_index: "NEW_RECORD" do |cuisine_form| %>
+      <%= render 'cuisine_fields', cuisine_form: cuisine_form %>
+    <% end %>
+  </template>
+<% end %>
+<script type="text/javascript" charset="utf-8">
+    // app/javascript/packs/dynamic_field.js
+
+    document.addEventListener("turbo:load", function() {
+        const addCuisineButton = document.getElementById("add-cuisine");
+        if (addCuisineButton) {
+            addCuisineButton.removeEventListener("click", addCuisineField); // Remove previous listener if exists
+            addCuisineButton.addEventListener("click", addCuisineField);
+        }
+
+        const cuisineContainer = document.getElementById("cuisines");
+        if (cuisineContainer) {
+            cuisineContainer.addEventListener("click", function(e) {
+                if (e.target && e.target.classList.contains("remove-cuisine")) {
+                    e.preventDefault();
+                    const cuisineField = e.target.closest(".cuisine-fields");
+
+                    if (cuisineField.querySelector("[name*='_destroy']")) {
+                        cuisineField.querySelector("[name*='_destroy']").value = "true";
+                        cuisineField.style.display = "none";
+                    } else {
+                        cuisineField.remove();
+                    }
+                }
+            });
+        }
+    });
+
+    function addCuisineField(e) {
+        e.preventDefault();
+        const cuisineContainer = document.getElementById("cuisines");
+        const template = document.getElementById("cuisine-template").content.cloneNode(true);
+
+        // Get the current number of cuisines
+        const newIndex = cuisineContainer.children.length;
+
+        template.querySelectorAll("input, label").forEach((element) => {
+            if (element.hasAttribute("name")) {
+                element.name = element.name.replace(/NEW_RECORD/g, newIndex);
+            }
+            if (element.hasAttribute("id")) {
+                element.id = element.id.replace(/NEW_RECORD/g, newIndex);
+            }
+        });
+
+        // Append a data attribute to the new cuisine fields for tracking
+        template.firstElementChild.setAttribute('data-index', newIndex);
+        cuisineContainer.appendChild(template);
+    }
+
+
+</script>

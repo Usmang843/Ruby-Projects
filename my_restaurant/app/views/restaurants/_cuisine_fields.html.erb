@@ -1,0 +1,19 @@
+<!-- views/restaurants/_cuisine_fields.html.erb -->
+<div class="cuisine-fields my-5">
+  <h4 class="font-medium mb-2">Cuisine</h4>
+
+  <%= cuisine_form.label :name %>
+  <%= cuisine_form.text_field :name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full", required: true %>
+
+  <%= cuisine_form.label :price %>
+  <%= cuisine_form.number_field :price, step: 0.01, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full", required: true %>
+
+  <!-- Checkbox for deleting the cuisine (only shown for existing cuisines) -->
+  <% if cuisine_form.object.persisted? %>
+    <%= cuisine_form.check_box :_destroy %>
+    <%= cuisine_form.label :_destroy, "Remove Cuisine", class: "text-red-600 ml-2" %>
+  <% end %>
+
+  <!-- Remove button for dynamic fields -->
+  <button type="button" class="remove-cuisine bg-red-600 text-white rounded-md px-3 py-1 mt-2">Remove</button>
+</div>

@@ -1,0 +1,54 @@
+<div id="<%= dom_id restaurant %>" class="max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden my-5 transition-transform transform hover:scale-105">
+  <div class="p-6">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-3"><%= restaurant.name %></h2>
+
+        <h2><%= restaurant.name %></h2>
+    <p>Average Rating: <%= restaurant.avg_rating || 'No ratings yet' %></p>
+
+
+
+    <p class="mb-4">
+      <strong class="font-medium text-gray-600">Description:</strong>
+      <span class="block text-gray-700"><%= restaurant.description %></span>
+    </p>
+
+    <p class="mb-4">
+      <strong class="font-medium text-gray-600">Address:</strong>
+      <span class="block text-gray-700"><%= restaurant.address %></span>
+    </p>
+
+    <p class="mb-4">
+      <strong class="font-medium text-gray-600">Phone:</strong>
+      <span class="block text-gray-700"><%= restaurant.phone %></span>
+    </p>
+
+    <h3 class="mt-6 text-lg font-semibold text-gray-800">Ratings & Reviews</h3>
+    <% if restaurant.reviews.any? %>
+      <div class="mt-2">
+        <%= render restaurant.reviews %>
+      </div>
+    <% else %>
+      <p class="text-gray-500">No reviews yet.</p>
+    <% end %>
+
+    <h3 class="mt-6 text-lg font-semibold text-gray-800">Cuisines:</h3>
+    <% if restaurant.cuisines.any? %>
+      <ul class="list-disc ml-5 mt-2">
+        <% restaurant.cuisines.each do |cuisine| %>
+          <li class="text-gray-700"><%= cuisine.name %> - $<%= cuisine.price %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-gray-500">No cuisines available.</p>
+    <% end %>
+
+    <% if current_user&.role == 'user' %>
+      <h3 class="mt-6 text-lg font-semibold text-gray-800">Add a Review</h3>
+      <%= render 'reviews/form', restaurant: restaurant %>
+    <% end %>
+
+    <% if current_user&.role == 'admin' %>
+      <%= link_to 'Show the Restaurant', restaurant, class: 'mt-4 rounded-lg py-2 px-4 bg-gray-200 hover:bg-gray-300 inline-block font-medium transition' %>
+    <% end %>
+  </div>
+</div>
